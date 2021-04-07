@@ -3,9 +3,12 @@
 from abc import ABC, abstractmethod
 
 
-class YahtzeeCategory(ABC):
-    def __init__(self):
-        pass
+class BaseCategory(ABC):
+
+    def __init__(self, multiplier=1, base=0):
+        self._multiplier = multiplier
+        self._base = base
+
 
     def score(self, dice):
         """Return a score for the category based on the input dice roll.
@@ -17,7 +20,7 @@ class YahtzeeCategory(ABC):
 
         dice = self._filter_dice(dice)
 
-        return self._score(dice)
+        return self._score(dice) if dice else 0
 
     def _filter_dice(self, dice):
         """Filter out any invalid dies from *dice*
@@ -28,17 +31,22 @@ class YahtzeeCategory(ABC):
         """
         return dice
 
-    @abstractmethod
     def _score(self, dice):
         """Calculate and return an integer score based on *dice*
 
-        :param dice: a tuple of 5 int dice values.
+        :param dice: a tuple of int dice values.
         :return: the calculated score
         """
+        return self._multiplier * sum(dice) + self._base
 
 
-class UpperCategory(YahtzeeCategory):
-    _number = 0
+class MatchCategory(BaseCategory):
+    
+    def __init__(self, number, *args, **kwargs):
+        super(MatchCategory, self).__init__(*args, **kwargs)
+
+        # TODO handle multiple match conditions?
+        self._number = number
 
     def _filter_dice(self, dice):
         return tuple(
@@ -46,29 +54,56 @@ class UpperCategory(YahtzeeCategory):
             if die == self._number
         )
 
+
+
+class CountCategory(BaseCategory):
+    def __init__(self, count, *args, **kwargs):
+        super(CountCategory, self).__init__(*args, **kwargs)
+
+        # TODO update to work with multiple counts
+        self._count = count
+
+    def _filter_dice(self, dice):
+        for die in set(dice):
+            if dice.count(die) >= self._count:
+                return dice
+
+
+class FullHouse(BaseCategory):
+    def _filter_dice(self, dice):
+        # TODO update logic to work with MatchCategory
+        # how to ensure that different numbers match different counts?
+        if (
+            len(set(dice)) == 2 and
+            dice[0] == dice[1] and 
+            dice[3] == dice[4]
+        ):
+            return dice
+
     def _score(self, dice):
-        return self._number * len(dice)
+        return 25
 
 
-class Ones(UpperCategory):
-    _number = 1
+class Chance(BaseCategory):
+    def _score(self, dice):
+        return sum(dice)
 
 
-class Twos(UpperCategory):
-    _number = 2
+class SmallStraight(BaseCategory):
+    def _filter_dice(self, dice):
+        for pattern in ((1,2,3,4), (2,3,4,5), (3,4,5,6)):
+            if set(pattern).issubset(dice):
+                return dice
+
+    def _score(self, dice):
+        return 30
 
 
-class Threes(UpperCategory):
-    _number = 3
+# chance is 1*d + 0
+# ones is 1*d + 0  (filtered)
+# yahtzee is 0*d + 50 (if filtered)
 
-
-class Fours(UpperCategory):
-    _number = 4
-
-
-class Fives(UpperCategory):
-    _number = 5
-
-
-class Sixes(UpperCategory):
-    _number = 6
+# list of counts to match
+# "filter": {"type": "match", "value": 1},
+# "filter": {"type": "count", "value": 3},
+# "filter": {"type": "sequence", "value": 4},

@@ -18,7 +18,7 @@ import yahtzee
     ]
 )
 def test_ones(dice, score):
-    cat = yahtzee.Ones()
+    cat = yahtzee.MatchCategory(number=1)
     assert cat.score(dice) == score
 
 
@@ -35,7 +35,7 @@ def test_ones(dice, score):
     ]
 )
 def test_twos(dice, score):
-    cat = yahtzee.Twos()
+    cat = yahtzee.MatchCategory(number=2)
     assert cat.score(dice) == score
 
 
@@ -52,7 +52,7 @@ def test_twos(dice, score):
     ]
 )
 def test_threes(dice, score):
-    cat = yahtzee.Threes()
+    cat = yahtzee.MatchCategory(number=3)
     assert cat.score(dice) == score
 
 
@@ -69,7 +69,7 @@ def test_threes(dice, score):
     ]
 )
 def test_fours(dice, score):
-    cat = yahtzee.Fours()
+    cat = yahtzee.MatchCategory(number=4)
     assert cat.score(dice) == score
 
 
@@ -86,7 +86,7 @@ def test_fours(dice, score):
     ]
 )
 def test_fives(dice, score):
-    cat = yahtzee.Fives()
+    cat = yahtzee.MatchCategory(number=5)
     assert cat.score(dice) == score
 
 
@@ -103,7 +103,5 @@ def test_fives(dice, score):
     ]
 )
 def test_sixes(dice, score):
-    cat = yahtzee.Sixes()
+    cat = yahtzee.MatchCategory(number=6)
     assert cat.score(dice) == score
-
-
