@@ -17,7 +17,7 @@ import yahtzee
     ]
 )
 def test_three_count(dice, score):
-    cat = yahtzee.CountCategory(count=3)
+    cat = yahtzee.CountCategory(counts=[3])
     assert cat.score(dice) == score
 
 
@@ -31,7 +31,7 @@ def test_three_count(dice, score):
     ]
 )
 def test_yahtzee(dice, score):
-    cat = yahtzee.CountCategory(count=5, multiplier=0, base=50)
+    cat = yahtzee.CountCategory(counts=[5], multiplier=0, base=50)
     assert cat.score(dice) == score
 
 
@@ -47,7 +47,8 @@ def test_yahtzee(dice, score):
     ]
 )
 def test_full_house(dice, score):
-    cat = yahtzee.FullHouse()
+    # cat = yahtzee.FullHouse()
+    cat = yahtzee.CountCategory(counts=[3,2], multiplier=0, base=25)
     assert cat.score(dice) == score
 
 

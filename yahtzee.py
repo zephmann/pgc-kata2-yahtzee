@@ -57,31 +57,38 @@ class MatchCategory(BaseCategory):
 
 
 class CountCategory(BaseCategory):
-    def __init__(self, count, *args, **kwargs):
+    def __init__(self, counts, *args, **kwargs):
         super(CountCategory, self).__init__(*args, **kwargs)
 
-        # TODO update to work with multiple counts
-        self._count = count
+        self._counts = sorted(counts, reverse=True)
 
     def _filter_dice(self, dice):
-        for die in set(dice):
-            if dice.count(die) >= self._count:
-                return dice
+        unique_dice = set(dice)
+        
+        for count in self._counts:
+            for die in unique_dice:
+                if dice.count(die) >= count:
+                    unique_dice.remove(die)
+                    break
+            else:
+                return
+
+        return dice
 
 
-class FullHouse(BaseCategory):
-    def _filter_dice(self, dice):
-        # TODO update logic to work with MatchCategory
-        # how to ensure that different numbers match different counts?
-        if (
-            len(set(dice)) == 2 and
-            dice[0] == dice[1] and 
-            dice[3] == dice[4]
-        ):
-            return dice
+# class FullHouse(BaseCategory):
+#     def _filter_dice(self, dice):
+#         # TODO update logic to work with MatchCategory
+#         # how to ensure that different numbers match different counts?
+#         if (
+#             len(set(dice)) == 2 and
+#             dice[0] == dice[1] and 
+#             dice[3] == dice[4]
+#         ):
+#             return dice
 
-    def _score(self, dice):
-        return 25
+#     def _score(self, dice):
+#         return 25
 
 
 class Chance(BaseCategory):
@@ -107,3 +114,7 @@ class SmallStraight(BaseCategory):
 # "filter": {"type": "match", "value": 1},
 # "filter": {"type": "count", "value": 3},
 # "filter": {"type": "sequence", "value": 4},
+
+
+# search backwards through count numbers,
+# somehow pop out number that matches

@@ -6,19 +6,26 @@ import yahtzee
 
 
 @pytest.mark.parametrize(
-    "dice, score",
+    "dice, filtered, score",
     [
-        ((2,3,4,5,6), 0),  # no ones
-        ((1,2,3,4,5), 1),  # one ones
-        ((1,1,3,4,5), 2),  # two ones
-        ((1,1,1,4,5), 3),  # three ones
-        ((1,1,1,1,5), 4),  # four ones
-        ((1,1,1,1,1), 5),  # five ones
-        ((5,4,3,2,1), 1),  # one ones, reversed
+        ((2,3,4,5,6), tuple(), 0),  # no ones
+        ((1,2,3,4,5), (1,), 1),  # one ones
+        ((1,1,3,4,5), (1,1), 2),  # two ones
+        ((1,1,1,4,5), (1,1,1), 3),  # three ones
+        ((1,1,1,1,5), (1,1,1,1), 4),  # four ones
+        ((1,1,1,1,1), (1,1,1,1,1), 5),  # five ones
+        ((5,4,3,2,1), (1,), 1),  # one ones, reversed
     ]
 )
-def test_ones(dice, score):
+def test_ones(dice, filtered, score):
     cat = yahtzee.MatchCategory(number=1)
+    
+    filtered_dice = cat._filter_dice(dice)
+    assert filtered_dice == filtered
+    
+    private_score = cat._score(filtered_dice)
+    assert private_score == score
+
     assert cat.score(dice) == score
 
 
