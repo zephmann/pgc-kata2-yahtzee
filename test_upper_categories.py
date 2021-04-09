@@ -2,7 +2,12 @@
 
 import pytest
 
-import yahtzee
+from yahtzee_categories import (
+    BaseCategory,
+    MatchCategory,
+    CountCategory,
+    SequenceCategory,
+)
 
 
 @pytest.mark.parametrize(
@@ -18,7 +23,7 @@ import yahtzee
     ]
 )
 def test_ones(dice, filtered, score):
-    cat = yahtzee.MatchCategory(number=1)
+    cat = MatchCategory(number=1)
     
     filtered_dice = cat._filter_dice(dice)
     assert filtered_dice == filtered
@@ -42,7 +47,7 @@ def test_ones(dice, filtered, score):
     ]
 )
 def test_twos(dice, score):
-    cat = yahtzee.MatchCategory(number=2)
+    cat = MatchCategory(number=2)
     assert cat.score(dice) == score
 
 
@@ -59,7 +64,7 @@ def test_twos(dice, score):
     ]
 )
 def test_threes(dice, score):
-    cat = yahtzee.MatchCategory(number=3)
+    cat = MatchCategory(number=3)
     assert cat.score(dice) == score
 
 
@@ -76,7 +81,7 @@ def test_threes(dice, score):
     ]
 )
 def test_fours(dice, score):
-    cat = yahtzee.MatchCategory(number=4)
+    cat = MatchCategory(number=4)
     assert cat.score(dice) == score
 
 
@@ -93,7 +98,7 @@ def test_fours(dice, score):
     ]
 )
 def test_fives(dice, score):
-    cat = yahtzee.MatchCategory(number=5)
+    cat = MatchCategory(number=5)
     assert cat.score(dice) == score
 
 
@@ -110,5 +115,5 @@ def test_fives(dice, score):
     ]
 )
 def test_sixes(dice, score):
-    cat = yahtzee.MatchCategory(number=6)
+    cat = MatchCategory(number=6)
     assert cat.score(dice) == score

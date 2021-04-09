@@ -1,0 +1,49 @@
+{
+    
+    "num_sides": 6,
+    "num_dice": 5,
+    "categories": [
+        {
+            "__type__": "count",
+            "name": "Three Of A Kind",
+            "counts": [3]
+        },
+        {
+            "__type__": "count",
+            "name": "Four Of A Kind",
+            "counts": [4]
+        },
+        {
+            "__type__": "count",
+            "name": "Yahtzee!",
+            "counts": [5],
+            "multiplier": 0,
+            "base": 50
+        },
+        {
+            "__type__": "count",
+            "name": "Full House",
+            "counts": [3, 2],
+            "multiplier": 0,
+            "base": 25
+        },
+        {
+            "__type__": "sequence",
+            "name": "Small Straight",
+            "length": 4,
+            "multiplier": 0,
+            "base": 30
+        },
+        {
+            "__type__": "sequence",
+            "name": "Large Straight",
+            "length": 5,
+            "multiplier": 0,
+            "base": 40
+        },
+        {
+            "__type__": "base",
+            "name": "Chance"
+        }
+    ]
+}

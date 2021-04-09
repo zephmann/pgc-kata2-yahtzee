@@ -1,14 +1,16 @@
 # :coding: utf-8
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class BaseCategory(ABC):
 
-    def __init__(self, multiplier=1, base=0):
+    def __init__(self, num_sides=6, name="", multiplier=1, base=0):
         self._multiplier = multiplier
         self._base = base
-
+        self._num_sides = num_sides
+        
+        self.name = name
 
     def score(self, dice):
         """Return a score for the category based on the input dice roll.
@@ -76,45 +78,22 @@ class CountCategory(BaseCategory):
         return dice
 
 
-# class FullHouse(BaseCategory):
-#     def _filter_dice(self, dice):
-#         # TODO update logic to work with MatchCategory
-#         # how to ensure that different numbers match different counts?
-#         if (
-#             len(set(dice)) == 2 and
-#             dice[0] == dice[1] and 
-#             dice[3] == dice[4]
-#         ):
-#             return dice
+class SequenceCategory(BaseCategory):
 
-#     def _score(self, dice):
-#         return 25
+    def __init__(self, length, num_sides=6, *args, **kwargs):
+        super(SequenceCategory, self).__init__(*args, **kwargs)
 
+        self._sequences = []
 
-class Chance(BaseCategory):
-    def _score(self, dice):
-        return sum(dice)
+        end = num_sides + 1
+        all_sides = range(1, end)
 
+        for start, stop in enumerate(range(length, end), 1):
+            self._sequences.append(
+                set(all_sides[start:stop])
+            )
 
-class SmallStraight(BaseCategory):
     def _filter_dice(self, dice):
-        for pattern in ((1,2,3,4), (2,3,4,5), (3,4,5,6)):
-            if set(pattern).issubset(dice):
+        for pattern in self._sequences:
+            if pattern.issubset(dice):
                 return dice
-
-    def _score(self, dice):
-        return 30
-
-
-# chance is 1*d + 0
-# ones is 1*d + 0  (filtered)
-# yahtzee is 0*d + 50 (if filtered)
-
-# list of counts to match
-# "filter": {"type": "match", "value": 1},
-# "filter": {"type": "count", "value": 3},
-# "filter": {"type": "sequence", "value": 4},
-
-
-# search backwards through count numbers,
-# somehow pop out number that matches
